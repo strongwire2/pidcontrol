@@ -21,15 +21,16 @@ def convert_coordinates(point):
 
 # body는 물체의 질량을 정의
 # shape는 물체의 모양을 정의 (충돌감지를 위해)
+ball_radius = 30
 body = pymunk.Body(mass=1, moment=10)
 body.position = 400, 400
-shape = pymunk.Circle(body, 10)
+shape = pymunk.Circle(body, ball_radius)
 shape.density = 1
 shape.elasticity = 0.95
 
 # segment_body = pymunk.Body(body_type=pymunk.Body.STATIC)
 b0 = space.static_body
-segment_shape = pymunk.Segment(b0, (0, 750), (800, 750), 5)
+segment_shape = pymunk.Segment(b0, (0, 550), (800, 750), 5)
 segment_shape.elasticity = 1
 space.add(body, shape)
 space.add(segment_shape)
@@ -43,8 +44,8 @@ def game():
                 return
         display.fill((255, 255, 255))
         x, y = body.position
-        pygame.draw.circle(display, (255, 0, 0), (x, y), 10)
-        pygame.draw.line(display, (0, 0, 0), (0, 750), (800, 750), 5)
+        pygame.draw.circle(display, (255, 0, 0), (x, y), ball_radius)
+        pygame.draw.line(display, (0, 0, 0), (0, 550), (800, 750), 5)
         pygame.display.update()  # 화면 그리기
         clock.tick(FPS)  # 지정한 fps가 되도록 delay를 준다.
         space.step(1/FPS)  # 물리엔진은 1/FPS만큼 진행한다.
