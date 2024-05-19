@@ -57,7 +57,7 @@ class PidApp:
 
         self.upper_body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.upper_body.position = self.arm_body.position.x+300, self.arm_body.position.y-200
-        self.upper_joint = pymunk.PinJoint(self.arm_body, self.upper_body, (300, -50), (0, 0))
+        self.upper_joint = pymunk.PinJoint(self.arm_body, self.upper_body, (300, 0), (0, 0))
         self.space.add(self.upper_body, self.upper_joint)
 
     def run(self):
@@ -80,6 +80,15 @@ class PidApp:
                 delta = 1
             offset += delta
             #self.upper_body.position = (self.upper_body.position.x, self.upper_body.position.y+delta)
+            #TODO: Error의 계산을 x 좌표로만 할게 아니고, 실제 ball의 중심을 기준으로 대각 기준을 잡아야 함.
+            e = 400 - self.ball_body.position.x
+            delta = e*0.3
+            #print(f"e={e}, delta={delta}")
+            if delta > 100:
+                delta = 100
+            elif delta < -100:
+                delta = -100
+            self.upper_body.position = (self.upper_body.position.x, 300 + delta)
         pygame.quit()
 
 app = PidApp()
