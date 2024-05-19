@@ -83,6 +83,7 @@ class PidApp:
             else:
                 de = e - self.prev_e
             self.prev_e = e
+            #delta = e*0.3
             delta = e*0.3 + de*30
             print(f"e={e}, de={de} delta={delta}")
             if delta > 100:
