@@ -82,7 +82,6 @@ class PidApp:
             #self.upper_body.position = (self.upper_body.position.x, self.upper_body.position.y+delta)
         pygame.quit()
 
-
 app = PidApp()
 app.setup()
 app.run()
