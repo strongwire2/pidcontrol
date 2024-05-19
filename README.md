@@ -8,9 +8,9 @@ PID Control을 시뮬레이트합니다.
   - `git clone https://github.com/strongwire2/pidcontrol.git`
   - `cd pidcontrol`
 - 가상환경 만들기
-  - `python -m venv venv`
+  - `python -m venv .venv`
 - 가상환경 실행하기
-  - `venv\Scripts\activate`
+  - `.venv\Scripts\activate`
 - 필요한 라이브러리 설치하기
   - `pip install -r requirements.txt`
 - PID Controll 프로그램 실행하기
