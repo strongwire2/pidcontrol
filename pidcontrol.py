@@ -28,7 +28,7 @@ class PidApp:
 
     def setup(self):
         self.ball_body = pymunk.Body()
-        self.ball_body.position = 300, 200
+        self.ball_body.position = 200, 200
         self.ball_shape = pymunk.Circle(self.ball_body, radius=20)
         self.ball_shape.elasticity = 1
         self.ball_shape.friction = 1
@@ -63,6 +63,7 @@ class PidApp:
     def run(self):
         offset = 0
         delta = 1
+        self.prev_e = None
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -74,16 +75,16 @@ class PidApp:
             pygame.display.update()
             self.clock.tick(self.fps)  # 지정한 fps가 되도록 delay를 준다.
             self.space.step(1 / self.fps)  # 물리엔진은 1/FPS만큼 진행한다.
-            if offset > 100:
-                delta = -1
-            elif offset < -100:
-                delta = 1
-            offset += delta
-            #self.upper_body.position = (self.upper_body.position.x, self.upper_body.position.y+delta)
             #TODO: Error의 계산을 x 좌표로만 할게 아니고, 실제 ball의 중심을 기준으로 대각 기준을 잡아야 함.
             e = 400 - self.ball_body.position.x
-            delta = e*0.3
-            #print(f"e={e}, delta={delta}")
+            de = 0
+            if self.prev_e is None:
+                de = 0
+            else:
+                de = e - self.prev_e
+            self.prev_e = e
+            delta = e*0.3 + de*30
+            print(f"e={e}, de={de} delta={delta}")
             if delta > 100:
                 delta = 100
             elif delta < -100:
