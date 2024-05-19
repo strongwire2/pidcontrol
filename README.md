@@ -19,6 +19,7 @@ PID Control을 시뮬레이트합니다.
 ## 참고자료
 - [pymunk Documentation](http://www.pymunk.org/_/downloads/en/stable/pdf/)
 - [pymunk Tutorial](https://readthedocs.org/projects/pymunk-tutorial/downloads/pdf/latest/)
+- [Slide and Pin Joint Demo Step by Step](https://www.pymunk.org/en/latest/tutorials/SlideAndPinJoint.html)
 - [pymunk Basics: Bouncing Ball](https://www.youtube.com/watch?v=nNjRz31-7s0&list=PL_N_kL9gRTm8lh7GxFHh3ym1RXi6I6c50&index=2)
 - [Why this Plate never lets the Ball Fall? Ball on Plate PID controller with Arduino](https://www.youtube.com/watch?v=0BDvbljP4Yk)
 - [PID Balance+Ball | full explanation & tuning](https://www.youtube.com/watch?v=JFTJ2SS4xyA)
