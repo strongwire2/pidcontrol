@@ -47,7 +47,13 @@ space.add(handle_body, handle_joint)
 
 running = True
 prev_error = None
+i_error = 0  # 오차의 누적
+
+# 설정값
 set_point = 400  # 중앙을 타겟으로 함
+kp = 0.3
+ki = 0.001
+kd = 30
 
 while running:
     for event in pygame.event.get():
@@ -69,9 +75,9 @@ while running:
     else:
         d_error = error - prev_error
     prev_error = error
-    # delta = e*0.3
-    delta = error*0.3 + d_error*30
-    print(f"e={error}, de={d_error} delta={delta}")
+    i_error += error
+    delta = kp*error + ki*i_error + kd*d_error
+    print(f"E={error}, P={kp*error} I={ki*i_error} D={kd*d_error} delta={delta}")
     # 급발진하지 않도록 제한
     if delta > 100:
         delta = 100
