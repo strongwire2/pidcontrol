@@ -3,7 +3,7 @@ import pygame
 import pymunk.pygame_util
 
 pygame.init()
-size = (800, 800)  # 공간의 크기
+size = (800, 500)  # 공간의 크기
 fps = 50
 clock = pygame.time.Clock()
 
@@ -19,7 +19,7 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 # Space에 놓을 객체들 정의
 # Ball Body와 Shape 정의
 ball_body = pymunk.Body()
-ball_body.position = 200, 470
+ball_body.position = 200, 270
 ball_shape = pymunk.Circle(ball_body, radius=20)  # ball_shape에 ball_body 연결함
 ball_shape.elasticity = 0
 ball_shape.friction = 1
@@ -29,7 +29,7 @@ space.add(ball_body, ball_shape)
 # Beam Body와 Beam Shape 정의
 # seesaw
 beam_body = pymunk.Body()
-beam_body.position = 400, 500
+beam_body.position = 400, 300
 beam_shape = pymunk.Segment(beam_body, (-300, 0), (300, 0), 3)
 beam_shape.density = 1
 beam_shape.friction = 1
@@ -105,7 +105,7 @@ while running:
     elif output < -max_output:
         output = -max_output
     # 실제 process 수행
-    handle_body.position = (handle_body.position.x, 300 + output)
+    handle_body.position = (handle_body.position.x, 100 + output)
 
     # set-point 점진적 증가. 한꺼번에 set-point 400 -> 600 식으로 옮기면 beam이 공을 쳐서 공중으로 날린다.
     # 실제 장치이면 점진적으로 증가하지만, 시뮬레이션에서는 갑자기 값이 증가하므로 이를 완화시킴
