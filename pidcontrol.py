@@ -17,7 +17,7 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 # Space에 놓을 객체들 정의
 # Ball Body와 Shape 정의
 ball_body = pymunk.Body()
-ball_body.position = 200, 200
+ball_body.position = 200, 470
 ball_shape = pymunk.Circle(ball_body, radius=20)  # ball_shape에 ball_body 연결함
 ball_shape.elasticity = 1
 ball_shape.friction = 1
@@ -48,11 +48,14 @@ space.add(handle_body, handle_joint)
 running = True
 prev_error = None
 i_error = 0  # 오차의 누적
+i_count = 50  # 오차를 누적할 개수
+past_errors = []  # i_count개의 오차를 저장함. i_count개 이상의 오래된 것은 지움
 
 # 설정값
 set_point = 400  # 중앙을 타겟으로 함
 kp = 0.3
-ki = 0.001
+#ki = 0.01
+ki = 0
 kd = 30
 
 while running:
@@ -75,9 +78,12 @@ while running:
     else:
         d_error = error - prev_error
     prev_error = error
-    i_error += error
+    past_errors.append(error)
+    if len(past_errors) > i_count:
+        past_errors.pop(0)
+    i_error = sum(past_errors)
     delta = kp*error + ki*i_error + kd*d_error
-    print(f"E={error}, P={kp*error} I={ki*i_error} D={kd*d_error} delta={delta}")
+    print(f"SP={set_point:.2f} E={error:.2f}, P={kp*error:.2f} I={ki*i_error:.2f} D={kd*d_error:.2f} delta={delta:.2f}")
     # 급발진하지 않도록 제한
     if delta > 100:
         delta = 100
