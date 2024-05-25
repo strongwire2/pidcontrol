@@ -102,7 +102,7 @@ def pid_control(kp, ki, kd, use_bump):
         # output 계산
         output = kp*error + ki*i_error + kd*d_error
         # CSV 출력
-        print(f"{set_point},{error},{kp*error},{ki*i_error},{kd*d_error}")
+        print(f"{set_point},{error},{kp*error},{ki*i_error},{kd*d_error},{output}")
         # 급발진하지 않도록 제한
         if output > max_output:
             output = max_output
