@@ -34,7 +34,7 @@ PID 제어를 사용하여 공을 원하는 위치에 옮기도록 beam의 각�
   - `python pidcontrol.py`
 - 조건을 주어 실행하기
   - `python pidcontrol.py [Kp] [Ki] [Kd] [use_bump]`
-  - 예: `python pidcontrol.py 50 0 10 False`
+  - 예: `python pidcontrol.py 0.3 0 10 False`
 
 ## PID Control 키 설명 
 - Set Point 설정
@@ -49,32 +49,40 @@ PID 제어를 사용하여 공을 원하는 위치에 옮기도록 beam의 각�
 ## 실행 케이스
 - Case 1: P만 사용
   - Kp=0.3, Ki=0, Kd=0
+  - `python pidcontrol.py 0.3 0 0`
   - 좌우로 왔다갔다 하지만 오차는 더욱 커져 떨어짐 
 - Case 2: P만 사용. Kp를 줄여봄 
   - Kp=0.1, Ki=0, Kd=0
-    - 몇번 더 좌우로 왔다갔다 하지만, 결국 떨어짐. 
+  - `python pidcontrol.py 0.1 0 0`
+  - 몇번 더 좌우로 왔다갔다 하지만, 결국 떨어짐. 
   - Case1, 2에서 볼 수 있는 건, 공은 t^2에 비례하여 움직이지만, 액션은 선형이라 맞출수가 없다. 
   - 속도가 빠르면 브레이크 역할을 하는 미분항이 필요하다. 
 - Case 3: Kp=0.3, Kd=10
   - Kp=0.3, Ki=0, Kd=10
+  - `python pidcontrol.py 0.3 0 10`
   - 몇번 왔다갔다 하지만(over-shoot) 결국엔 잘 멈춘다. 
   - Kd를 더 올리면 더 빨리 멈출 것이다
 - Case 4: Kp=0.3, Kd=30
   - Kp=0.3, Ki=0, Kd=30
+  - `python pidcontrol.py 0.3 0 30`
   - 오버슛없이 한번에 잘 멈춘다. 
 - Case 5: Kp=0.3, Kd=50
   - Kp=0.3, Ki=0, Kd=50
+  - `python pidcontrol.py 0.3 0 50`
   - 오버슛없지만 브레이크를 너무 많이 써서 느리다. 
 - Case 6: 장애물을 놓아보자. 
   - Kp=0.3, Ki=0, Kd=30, use_bump=True
+  - `python pidcontrol.py 0.3 0 30 True`
   - 장애물에 걸려서 진행하지 못한다. 
   - 속도가 0에 가깝고, 위치가 고정되어 항상 같은 각도를 유지해서 넘지 못하는 것.
   - 오차를 누적하면 beam의 각도를 더 높이게 하면 해결될 것이다. 그래서 I항 사용
 - Case 7: I항 추가
   - Kp=0.3, Ki=0.01, Kd=30, use_bump=True
+  - `python pidcontrol.py 0.3 0.01 30 True`
   - 장애물은 통과하지만, I항 때문에 빔 컨트롤이 과도해 브레이크 더 필요함. 
 - Case 8: I항 추가에 속도가 빨라 D항 올림
   - Kp=0.3, Ki=0.01, Kd=60, use_bump=True
+  - `python pidcontrol.py 0.3 0.01 60 True`
   - 오버슛 최소화, 장애물 통과 
 
 ## 참고자료
