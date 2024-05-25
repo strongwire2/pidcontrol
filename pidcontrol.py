@@ -21,7 +21,7 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 ball_body = pymunk.Body()
 ball_body.position = 200, 470
 ball_shape = pymunk.Circle(ball_body, radius=20)  # ball_shape에 ball_body 연결함
-ball_shape.elasticity = 1
+ball_shape.elasticity = 0
 ball_shape.friction = 1
 ball_shape.density = 1  # 이거 안쓰면 에러남. 이걸 안쓰려면 Body 정의할 때 mass, inertia를 써주어야 함.
 space.add(ball_body, ball_shape)
@@ -37,7 +37,7 @@ bump_shape = pymunk.Segment(beam_body, (-170, 0), (-170, -7), 3)
 bump_shape.density = 1
 bump_shape.friction = 1
 space.add(beam_body, beam_shape)
-#space.add(beam_body, beam_shape, bump_shape)
+space.add(bump_shape)
 
 # Beam Center 정의
 beam_center_body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
@@ -54,13 +54,15 @@ space.add(handle_body, handle_joint)
 running = True
 prev_error = None
 i_error = 0  # 오차의 누적
-i_count = 70  # 오차를 누적할 개수
+i_count = 100  # 오차를 누적할 개수
+max_output = 200  # output의 최대
 past_errors = []  # i_count개의 오차를 저장함. i_count개 이상의 오래된 것은 지움
 
 # 설정값
 set_point = 400  # 중앙을 타겟으로 함
+current_set_point = set_point
 kp = 0.3 #0.3
-#ki = 0
+ki = 0
 ki = 0.01
 #kd = 0
 kd = 50
@@ -69,6 +71,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                set_point = 200
+            elif event.key == pygame.K_DOWN:
+                set_point = 400
+            elif event.key == pygame.K_RIGHT:
+                set_point = 600
     # 그림을 그린다
     screen.fill((255, 255, 255))  # 흰색 배경
     # debug_draw를 쓰면 직접 pygame에 그리지 않아도 됨. 알아서 그려줌
@@ -76,7 +85,7 @@ while running:
 
     # 단순함을 위해 Error의 계산을 x 좌표로만 한다.
     pv = ball_body.position.x  # pv = process value
-    error = set_point - pv  # set_point에서의 x 거리 차이를 error로 잡음
+    error = current_set_point - pv  # set_point에서의 x 거리 차이를 error로 잡음
     d_error = 0  # 오차의 변화를 담음
     if prev_error is None:
         d_error = 0
@@ -91,12 +100,19 @@ while running:
     values_display = f"E={error:7.2f}, P={kp*error:7.2f}, I={ki*i_error:7.2f}, D={kd*d_error:7.2f}, output={output:7.2f}"
     print(values_display)
     # 급발진하지 않도록 제한
-    if output > 200:
-        output = 200
-    elif output < -200:
-        output = -200
+    if output > max_output:
+        output = max_output
+    elif output < -max_output:
+        output = -max_output
     # 실제 process 수행
     handle_body.position = (handle_body.position.x, 300 + output)
+
+    # set-point 점진적 증가. 한꺼번에 set-point 400 -> 600 식으로 옮기면 beam이 공을 쳐서 공중으로 날린다.
+    # 실제 장치이면 점진적으로 증가하지만, 시뮬레이션에서는 갑자기 값이 증가하므로 이를 완화시킴
+    if current_set_point < set_point:
+        current_set_point += 1
+    elif current_set_point > set_point:
+        current_set_point -= 1
 
     # 값을 화면에 출력
     settings_display = f"SP={set_point}, Kp={kp:}, Ki={ki:}, Kd:{kd:}"
